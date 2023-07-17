@@ -1,11 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 char matrix[3][3];
 
 void montarmatrix(void);
 void visualizarmatrix(void);
 void jogadadoplayer(void);
+void jogadadocomputador(void);
 int verificarescolha(int coluna, int linha);
+int gerarNumeroAleatorio(void);
+void verificarlinha(void);
+void verificarcoluna(void);
+
 
 
 void main(){
@@ -15,6 +22,8 @@ void main(){
     visualizarmatrix();
     jogadadoplayer();
     visualizarmatrix();
+    jogadadoplayer();
+    verificarlinha();
 }
 
 
@@ -53,5 +62,40 @@ int verificarescolha(int coluna, int linha){
         return 1;
     }else{
         return 0;
+    }
+}
+
+int gerarNumeroAleatorio(void) {
+    int numero = 0;
+    numero = rand() % 4;
+    return numero;
+}
+
+void jogadadocomputador(void){
+    srand(time(NULL));
+    int coluna, linha;
+    coluna = gerarNumeroAleatorio();
+    linha = gerarNumeroAleatorio();
+    int posicao = verificarescolha(coluna, linha);
+    if(posicao){
+        matrix[coluna][linha] = 'O';
+    }else{
+        printf("posição ocupada\n");
+        jogadadocomputador();
+    }
+}
+
+void verificarlinha(void){
+    int end = 0;
+    for(int l = 0; l<3; l++){
+        if(matrix[0][l] == matrix[1][l] && matrix[1][l] == matrix[2][l]){
+            end = 1;
+            break;
+        }
+    }
+    if(end){
+        printf("fim de jogo");
+    }else{
+        printf("ainda não");
     }
 }
