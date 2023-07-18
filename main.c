@@ -4,6 +4,7 @@
 
 
 char matrix[3][3];
+char end = ' ';
 
 void montarmatrix(void);
 void visualizarmatrix(void);
@@ -17,15 +18,12 @@ void verificarempate(void);
 
 
 void main(){
-    char end = ' ';
+    
     srand((unsigned int)time(NULL));
     montarmatrix();
     do{
-        verificarempate();
         jogadadoplayer();
-        verificarempate();
         jogadadocomputador();
-        end = verificarvencedor();
         if(end != ' ')break;
     } while (end == ' ');
     visualizarmatrix();
@@ -56,6 +54,10 @@ void visualizarmatrix(void){
 
 void jogadadoplayer(void){
     int l, c;
+    end = verificarvencedor();
+    if(end != ' '){
+        return;
+    }
     visualizarmatrix();
     printf("\nDigite a posicao do X ");
     scanf("%d %d", &l, &c);
@@ -85,6 +87,10 @@ int gerarNumeroAleatorio(void) {
 
 
 void jogadadocomputador(void){
+    end = verificarvencedor();
+    if(end != ' '){
+        return;
+    }
     int coluna, linha;
     coluna = gerarNumeroAleatorio();
     linha = gerarNumeroAleatorio();
@@ -122,6 +128,8 @@ char verificarvencedor(void){
     if(matrix[0][2] == matrix[1][1] && matrix[0][2] == matrix[2][0]){
         return matrix[0][2];
     }
+
+    verificarempate();
 
     return ' ';
 }
