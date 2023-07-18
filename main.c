@@ -12,14 +12,19 @@ void jogadadocomputador(void);
 int verificarescolha(int coluna, int linha);
 int gerarNumeroAleatorio(void);
 char verificarvencedor(void);
-
+int matrizCompleta(void);
+void verificarempate(void);
 
 
 void main(){
     char end = ' ';
+    srand((unsigned int)time(NULL));
     montarmatrix();
     do{
+        verificarempate();
         jogadadoplayer();
+        verificarempate();
+        jogadadocomputador();
         end = verificarvencedor();
         if(end != ' ')break;
     } while (end == ' ');
@@ -55,16 +60,14 @@ void jogadadoplayer(void){
     printf("\nDigite a posicao do X ");
     scanf("%d %d", &l, &c);
     l--; c--;
-    int posicao = verificarescolha(c, l);
+    int posicao = verificarescolha(l, c); // Ordem dos argumentos invertida aqui
     if(posicao){
-        matrix[c][l] = 'X';
-        jogadadocomputador();
+        matrix[l][c] = 'X';
     }else{
         printf("Posição já ocupada\n");
         jogadadoplayer();
     }
 }
-
 
 int verificarescolha(int coluna, int linha){
     if(matrix[coluna][linha] == ' '){
@@ -76,14 +79,12 @@ int verificarescolha(int coluna, int linha){
 
 
 int gerarNumeroAleatorio(void) {
-    int numero = 0;
-    numero = rand() % 3;
+    int numero = rand() % 3;
     return numero;
 }
 
 
 void jogadadocomputador(void){
-    srand(time(NULL));
     int coluna, linha;
     coluna = gerarNumeroAleatorio();
     linha = gerarNumeroAleatorio();
@@ -123,4 +124,25 @@ char verificarvencedor(void){
     }
 
     return ' ';
+}
+
+
+int matrizCompleta(void) {
+    for (int l = 0; l < 3; l++) {
+        for (int c = 0; c < 3; c++) {
+            if (matrix[l][c] == ' ') {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+
+void verificarempate(void){
+    if (matrizCompleta()) {
+        printf("A matriz esta completa. O jogo empatou.\n");
+        visualizarmatrix();
+        exit(0);
+    }
 }
