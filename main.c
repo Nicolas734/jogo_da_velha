@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 char matrix[3][3];
 
 void montarmatrix(void);
@@ -10,20 +11,24 @@ void jogadadoplayer(void);
 void jogadadocomputador(void);
 int verificarescolha(int coluna, int linha);
 int gerarNumeroAleatorio(void);
-void verificarlinha(void);
-void verificarcoluna(void);
+char verificarvencedor(void);
 
 
 
 void main(){
+    char end = ' ';
     montarmatrix();
+    do{
+        jogadadoplayer();
+        end = verificarvencedor();
+        if(end != ' ')break;
+    } while (end == ' ');
     visualizarmatrix();
-    jogadadoplayer();
-    visualizarmatrix();
-    jogadadoplayer();
-    visualizarmatrix();
-    jogadadoplayer();
-    verificarlinha();
+    if(end == 'X'){
+        printf("Voce ganhou!\n");
+    }else{
+        printf("O computador ganhou\n");
+    }
 }
 
 
@@ -43,19 +48,23 @@ void visualizarmatrix(void){
     }
 }
 
+
 void jogadadoplayer(void){
     int l, c;
-    printf("digite a posicao do X ");
+    visualizarmatrix();
+    printf("\nDigite a posicao do X ");
     scanf("%d %d", &l, &c);
     l--; c--;
     int posicao = verificarescolha(c, l);
     if(posicao){
         matrix[c][l] = 'X';
+        jogadadocomputador();
     }else{
-        printf("posição já ocupada\n");
+        printf("Posição já ocupada\n");
         jogadadoplayer();
     }
 }
+
 
 int verificarescolha(int coluna, int linha){
     if(matrix[coluna][linha] == ' '){
@@ -65,37 +74,53 @@ int verificarescolha(int coluna, int linha){
     }
 }
 
+
 int gerarNumeroAleatorio(void) {
     int numero = 0;
-    numero = rand() % 4;
+    numero = rand() % 3;
     return numero;
 }
+
 
 void jogadadocomputador(void){
     srand(time(NULL));
     int coluna, linha;
     coluna = gerarNumeroAleatorio();
     linha = gerarNumeroAleatorio();
-    int posicao = verificarescolha(coluna, linha);
+    int posicao = verificarescolha(linha, coluna);
     if(posicao){
-        matrix[coluna][linha] = 'O';
+        matrix[linha][coluna] = 'O';
     }else{
-        printf("posição ocupada\n");
         jogadadocomputador();
     }
 }
 
-void verificarlinha(void){
-    int end = 0;
-    for(int l = 0; l<3; l++){
-        if(matrix[0][l] == matrix[1][l] && matrix[1][l] == matrix[2][l]){
-            end = 1;
-            break;
+
+char verificarvencedor(void){
+    int i;
+
+    /* Verifica as linhas */
+    for(i = 0; i < 3; i++){
+        if(matrix[i][0] == matrix[i][1] && matrix[i][0] == matrix[i][2]){
+            return matrix[i][0];
         }
     }
-    if(end){
-        printf("fim de jogo");
-    }else{
-        printf("ainda não");
+
+    /* Verifica as colunas */
+    for(i = 0; i < 3; i++){
+        if(matrix[0][i] == matrix[1][i] && matrix[0][i] == matrix[2][i]){
+            return matrix[0][i];
+        }
     }
+
+    /* Verifica as diagonais */
+    if(matrix[0][0] == matrix[1][1] && matrix[0][0] == matrix[2][2]){
+        return matrix[0][0];
+    }
+
+    if(matrix[0][2] == matrix[1][1] && matrix[0][2] == matrix[2][0]){
+        return matrix[0][2];
+    }
+
+    return ' ';
 }
